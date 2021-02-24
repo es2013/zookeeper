@@ -9,6 +9,9 @@ var app = express();
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
+//The way it works is that we provide a file path to a location in our application 
+//(in this case, the public folder) and instruct the server to make these files static resources. 
+app.use(express.static('public'));
 
 function filterByQuery(query, animalsArray) {
     let personalityTraitsArray = [];
@@ -105,6 +108,23 @@ app.post('/api/animals', (req, res) => {
     }
 
 });
+//set up GET route to serve index.html
+app.get('/', (req,res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+//set up the get route to serve animals.html
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname,'./public/animals.html'))
+})
+
+//set up GET route to serve up the zookeepers file
+app.get('/zookeeper', (req,res) =>{
+res.sendFile(path.join(__dirname,'./public/zookeepers.html'))
+});
+//when did we add the * route??
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
 
 app.listen(PORT, () => {
     console.log(`API server is now on port ${PORT}`)
